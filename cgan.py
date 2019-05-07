@@ -140,6 +140,4 @@ class cgan():
             rz_out=(f_out+1)*255/2
             rz_img=rz_out.astype(np.uint8)
             if(epoch%100==0):
-                cv2.imwrite(self.result_path+"/"+("%05d" % epoch)+".jpg",rz_img)
-            cv2.imshow("gg",rz_img)
-            cv2.waitKey(1)
+                cv2.imwrite(self.result_path+"/"+("%07d" % epoch)+".jpg",rz_img)
