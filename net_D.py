@@ -41,8 +41,6 @@ class net_D(nn.Module):
     def forward(self, input):
         """Standard forward."""
         out=self.model(input)
-        print(out.size())
         out=out.view(-1,512*9)
-        print(out.size())
         out=self.fc(out)
         return out
