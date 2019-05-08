@@ -25,12 +25,24 @@ class net_D(nn.Module):
         sequence += [
             nn.Conv2d(ndf * nf_mult_prev, ndf * nf_mult, kernel_size=kw, stride=1, padding=padw, bias=use_bias),
             norm_layer(ndf * nf_mult),
+            nn.LeakyReLU(0.2, True),
+            nn.Conv2d(ndf * nf_mult, ndf * nf_mult, kernel_size=kw, stride=1, padding=padw, bias=use_bias),
+            norm_layer(ndf * nf_mult),
             nn.LeakyReLU(0.2, True)
         ]
-
-        sequence += [nn.Conv2d(ndf * nf_mult, 1, kernel_size=kw, stride=1, padding=padw)]  # output 1 channel prediction map
+        fcs=[nn.Linear(ndf * nf_mult*9, 1),
+            nn.Sigmoid()]
+        sequence += [nn.Conv2d(ndf * nf_mult,ndf * nf_mult, kernel_size=kw, stride=1, padding=0),
+            norm_layer(ndf * nf_mult),
+            nn.LeakyReLU(0.2, True)] # output 1 channel prediction map
         self.model = nn.Sequential(*sequence)
+        self.fc = nn.Sequential(*fcs)
 
     def forward(self, input):
         """Standard forward."""
-        return self.model(input)
+        out=self.model(input)
+        print(out.size())
+        out=out.view(-1,512*9)
+        print(out.size())
+        out=self.fc(out)
+        return out
