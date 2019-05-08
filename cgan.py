@@ -13,7 +13,7 @@ import tqdm
 from torch.nn import init
 
 class cgan():
-    def __init__(self,lr,beta1,model_path,result_path,batch_size=4):
+    def __init__(self,lr,beta1,model_path,result_path,batch_size=20):
         self.batch_size=batch_size
         self.device = torch.device('cuda:0')
         self.result_path=result_path
@@ -27,7 +27,7 @@ class cgan():
             self.net_D.load_state_dict(torch.load(model_path+"/net_D.pth"))
         self.optimizer_G = torch.optim.Adam(self.net_G.parameters(), lr=lr, betas=(beta1, 0.999))
         self.optimizer_D = torch.optim.Adam(self.net_D.parameters(), lr=lr, betas=(beta1, 0.999))
-        self.gan_loss=nn.MSELoss().to(self.device)
+        self.gan_loss=nn.BCELoss().to(self.device)
         self.real_label=torch.tensor(1.0)
         self.fake_label=torch.tensor(0.0)
     def init_weights(self, init_type='normal', init_gain=0.02):
